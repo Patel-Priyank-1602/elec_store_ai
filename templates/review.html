@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .product-container {
+            display: flex;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .product-image {
+            flex: 0 0 40%;
+            padding-right: 20px;
+        }
+        .product-image img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .product-details {
+            flex: 0 0 60%;
+        }
+        .product-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .product-price {
+            font-size: 20px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        .product-category {
+            margin-bottom: 15px;
+            color: #7f8c8d;
+        }
+        .reviews-container {
+            margin-top: 30px;
+        }
+        .review-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .rating-selector {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+        .rating-option {
+            display: flex;
+            align-items: center;
+        }
+        .rating-option input {
+            margin-right: 5px;
+        }
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .review {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .review-rating {
+            color: #f39c12;
+        }
+        .review-date {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .review-user {
+            font-weight: bold;
+        }
+        .stars {
+            color: #f39c12;
+        }
+        .no-reviews {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{{ url_for('index') }}">Electronics Store</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('my_reviews') }}">My Reviews</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout ({{ user.name }})</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="product-container">
+                <div class="product-image">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                </div>
+                <div class="product-details">
+                    <h1 class="product-title">{{ product.name }}</h1>
+                    <p class="product-price">${{ product.price }}</p>
+                    <p class="product-category">Category: {{ product.category }} > {{ product.subcategory }}</p>
+                    <p>{{ product.description }}</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="reviews-container">
+                <h2>Write a Review</h2>
+                <form id="reviewForm" class="review-form" action="{{ url_for('add_review', product_id=product.id) }}" method="POST">
+                    <input type="hidden" id="productId" name="product_id" value="{{ product.id }}">
+                    
+                    <div class="form-group">
+                        <label>Rating:</label>
+                        <div class="rating-selector">
+                            <div class="rating-option">
+                                <input type="radio" id="rating1" name="rating" value="1" required>
+                                <label for="rating1">1 <i class="fas fa-star"></i></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating2" name="rating" value="2">
+                                <label for="rating2">2 <i class="fas fa-star"></i></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating3" name="rating" value="3">
+                                <label for="rating3">3 <i class="fas fa-star"></i></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating4" name="rating" value="4">
+                                <label for="rating4">4 <i class="fas fa-star"></i></label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" id="rating5" name="rating" value="5">
+                                <label for="rating5">5 <i class="fas fa-star"></i></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comment">Your Review:</label>
+                        <textarea id="comment" name="comment" rows="4" placeholder="Write your review here..." required></textarea>
+                    </div>
+
+                    <button type="submit">Submit Review</button>
+                </form>
+
+                <h2>Product Reviews</h2>
+                {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="review">
+                        <div class="review-header">
+                            <div>
+                                <span class="review-user">{{ review.user_name }}</span>
+                                <span class="review-rating">
+                                    {% for i in range(review.rating) %}
+                                        <i class="fas fa-star stars"></i>
+                                    {% endfor %}
+                                    {% for i in range(5 - review.rating) %}
+                                        <i class="far fa-star stars"></i>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                            <span class="review-date">{{ review.created_at }}</span>
+                        </div>
+                        <p>{{ review.comment }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-reviews">
+                        <p>No reviews yet. Be the first to review this product!</p>
+                    </div>
+                {% endif %}
+            </div>
+        <//        </div>
+    </main>
+</body>
+</html>

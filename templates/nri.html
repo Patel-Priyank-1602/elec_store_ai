@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Transfer Payment</title>
+
+    <style>
+        :root {
+            --primary: #0070f3;
+            --primary-light: #e1f0ff;
+            --primary-dark: #0056b3;
+            --success: #0cac6e;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --accent-gradient: linear-gradient(135deg, #6ab7ff, #0070f3);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f2ff, #d0e7ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--accent-gradient);
+        }
+
+        h1 {
+            font-size: 1.5em;
+            color: #0a2540;
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 0.95em;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .info-badge {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #0a2540;
+        }
+
+        .info-badge i {
+            color: var(--primary);
+            margin-right: 5px;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .payment-method {
+            flex: 1;
+        }
+
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+
+        .payment-method label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            background-color: #f8fafc;
+        }
+
+        .payment-method label:hover {
+            border-color: var(--primary);
+            background-color: #f0f7ff;
+        }
+
+        .payment-method input[type="radio"]:checked + label {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .payment-method-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 40px;
+            background-color: white;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-method-name {
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            font-size: 1em;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+        }
+
+        .amount-display {
+            background-color: #f0f7ff;
+            border: 1px dashed #0070f3;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+            color: #0a2540;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #fff;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 112, 243, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 10px rgba(0, 112, 243, 0.25);
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 0.8em;
+            color: #64748b;
+        }
+
+        .secure-note i {
+            margin-right: 5px;
+            color: var(--success);
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+
+            .payment-methods {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .payment-method {
+                flex: 1 0 30%;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+
+            h2 {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Bank Transfer Payment</h1>
+            <h2>Choose your preferred payment method</h2>
+
+            <div class="info-badge">
+                <i class="fa-solid fa-circle-info"></i>
+                Beneficiary Name, Account Number & Bank Already Added
+            </div>
+
+            <form action="pay.php" id="paymentForm">
+                <div class="payment-methods">
+                    <div class="payment-method">
+                        <input type="radio" name="ifc" id="NEFT" value="NEFT" required>
+                        <label for="NEFT">
+                            <div class="payment-method-icon">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </div>
+                            <span class="payment-method-name">NEFT</span>
+                        </label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="radio" name="ifc" id="RTGS" value="RTGS">
+                        <label for="RTGS">
+                            <div class="payment-method-icon">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                            </div>
+                            <span class="payment-method-name">RTGS</span>
+                        </label>
+                    </div>
+                    <div class="payment-method">
+                        <input type="radio" name="ifc" id="IMPS" value="IMPS">
+                        <label for="IMPS">
+                            <div class="payment-method-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <span class="payment-method-name">IMPS</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="branch-name">Branch Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-building"></i>
+                        <input type="text" id="branch-name" placeholder="Enter bank branch name" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="ifsc-code">IFSC Code</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-hashtag"></i>
+                        <input type="text" id="ifsc-code" placeholder="Enter IFSC code" required>
+                    </div>
+                </div>
+
+                <div class="amount-display">
+                    <i class="fa-solid fa-indian-rupee-sign"></i> <span id="displayed-amount">0.00</span>
+                </div>
+
+                <div>
+                    <input type="hidden" id="amount" name="amount">
+                    <button type="submit">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Complete Payment
+                    </button>
+                </div>
+
+                <div class="secure-note">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Your bank information is encrypted and secure
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // IFSC code validation
+            document.getElementById("ifsc-code").addEventListener("input", function (e) {
+                this.value = this.value.toUpperCase();
+                // Remove non-alphanumeric characters
+                this.value = this.value.replace(/[^A-Z0-9]/g, '');
+                // Limit to 11 characters (standard IFSC length)
+                if (this.value.length > 11) {
+                    this.value = this.value.slice(0, 11);
+                }
+            });
+
+            // Retrieve total amount from localStorage
+            let totalAmount = localStorage.getItem("cartTotalAmount");
+
+            if (totalAmount) {
+                // Format the amount with commas for thousands
+                const formattedAmount = parseFloat(totalAmount).toLocaleString('en-IN', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                });
+                
+                document.getElementById("displayed-amount").textContent = formattedAmount;
+                document.getElementById("amount").value = totalAmount;
+            } else {
+                document.getElementById("displayed-amount").textContent = "0.00";
+                
+                // Comment this out for demo purposes
+                // alert("No amount found! Redirecting to cart...");
+                // window.location.href = "/cart";
+            }
+        });
+
+        document.getElementById("paymentForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            // Basic validation
+            const branchName = document.getElementById("branch-name").value.trim();
+            const ifscCode = document.getElementById("ifsc-code").value.trim();
+            
+            if (!document.querySelector('input[name="ifc"]:checked')) {
+                alert("Please select a payment method");
+                return;
+            }
+            
+            if (!branchName) {
+                alert("Please enter branch name");
+                return;
+            }
+            
+            if (ifscCode.length !== 11) {
+                alert("IFSC code must be 11 characters");
+                return;
+            }
+            
+            // Success animation
+            const button = document.querySelector('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fa-solid fa-circle-check"></i> Payment Initiated!';
+            button.style.background = 'linear-gradient(135deg, #34d399, #059669)';
+            
+            setTimeout(() => {
+                alert("Payment successful! ✅ Your order has been placed and will arrive within a maximum of 7 working days.");
+                // Reset button after alert is dismissed
+                button.innerHTML = originalText;
+                button.style.background = 'var(--accent-gradient)';
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

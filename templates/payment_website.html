@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayFlex - Secure Payment Gateway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --bg-gradient: linear-gradient(135deg, #4682b4, #000000);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6495ed, #add8e6);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--bg-gradient);
+            padding: 20px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--success);
+        }
+
+        .payment-form {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .form-section {
+            padding: 30px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            background-color: var(--primary-light);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            background-color: #fcfcfc;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+
+        .form-control:disabled,
+        .form-control[readonly] {
+            background-color: #f5f5f5;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .beneficiary-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .payment-method {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-method i {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .payment-method h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .payment-method p {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--bg-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .secure-badge i {
+            margin-right: 5px;
+            color: var(--success);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .flash-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>PayFlex
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form action="{{ url_for('save_payment_details') }}" method="POST" class="payment-form">
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user-circle"></i>Account Holder Details
+                </h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" class="form-control" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank_name">Bank</label>
+                        <select id="bank_name" name="bank_name" class="form-control" required>
+                            <option value="" disabled selected>Select your bank</option>
+                            <option value="Bank Of Baroda">Bank Of Baroda</option>
+                            <option value="State Bank Of India">State Bank Of India</option>
+                            <option value="HDFC Bank">HDFC Bank</option>
+                            <option value="AXIS Bank">AXIS Bank</option>
+                            <option value="Punjab National Bank">Punjab National Bank</option>
+                            <option value="ICICI Bank">ICICI Bank</option>
+                            <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="account_number">Account Number</label>
+                        <input type="text" id="account_number" name="account_number" class="form-control" required
+                            placeholder="Enter your account number">
+                    </div>
+                    <div class="form-group">
+                        <label for="mobile_number">Mobile Number</label>
+                        <input type="text" id="mobile_number" name="mobile_number" class="form-control" required
+                            placeholder="Enter your mobile number">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-shipping-fast"></i>Shipping Address
+                </h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="shipping_name">Full Name</label>
+                        <input type="text" id="shipping_name" name="shipping_name" class="form-control" required
+                            placeholder="Enter recipient's full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping_mobile">Mobile Number</label>
+                        <input type="tel" id="shipping_mobile" name="shipping_mobile" class="form-control" required
+                            placeholder="Enter contact number">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shipping_address1">Address Line 1</label>
+                    <input type="text" id="shipping_address1" name="shipping_address1" class="form-control" required
+                        placeholder="Street address, P.O. box, company name">
+                </div>
+                <div class="form-group">
+                    <label for="shipping_address2">Address Line 2 (Optional)</label>
+                    <input type="text" id="shipping_address2" name="shipping_address2" class="form-control"
+                        placeholder="Apartment, suite, unit, building, floor, etc.">
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="shipping_city">City</label>
+                        <input type="text" id="shipping_city" name="shipping_city" class="form-control" required placeholder="Enter city">
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping_state">State</label>
+                        <input type="text" id="shipping_state" name="shipping_state" class="form-control" required placeholder="Enter state">
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="shipping_zip">ZIP/Postal Code</label>
+                        <input type="text" id="shipping_zip" name="shipping_zip" class="form-control" required
+                            placeholder="Enter postal code">
+                    </div>
+                    <div class="form-group">
+                        <label for="shipping_country">Country</label>
+                        <select id="shipping_country" name="shipping_country" class="form-control" required>
+                            <option value="" disabled selected>Select country</option>
+                            <option value="India">India</option>
+                            <option value="USA">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="shipping_instructions">Delivery Instructions (Optional)</label>
+                    <textarea id="shipping_instructions" name="shipping_instructions" class="form-control"
+                        placeholder="Any special instructions for delivery"></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="saveAddress">
+                    <label for="saveAddress">Save this address for future purchases</label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user-tag"></i>Beneficiary Details
+                </h2>
+                <div class="beneficiary-info">
+                    <p>You are making a payment to: <strong>Electronic store</strong></p>
+                    <p>Bank: <strong>Bank Of Baroda</strong></p>
+                    <p>Account Number: <strong>65345677654321</strong></p>
+                    <p>Contact: <strong>9856745680</strong></p>
+                </div>
+                <!-- Hidden fields for beneficiary details -->
+                <input type="hidden" name="beneficiary_name" value="Electronic store">
+                <input type="hidden" name="beneficiary_bank" value="Bank Of Baroda">
+                <input type="hidden" name="beneficiary_account" value="65345677654321">
+                <input type="hidden" name="beneficiary_mobile" value="9856745680">
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-credit-card"></i>Select Payment Method
+                </h2>
+                <div class="payment-methods">
+                    <button type="submit" name="payment_method" value="Credit/Debit Card" class="payment-method">
+                        <i class="fas fa-credit-card"></i>
+                        <h4>Credit/Debit Card</h4>
+                        <p>Pay securely with your card</p>
+                    </button>
+                    <button type="submit" name="payment_method" value="UPI" class="payment-method">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h4>UPI</h4>
+                        <p>Pay using any UPI app</p>
+                    </button>
+                    <button type="submit" name="payment_method" value="Bank Transfer" class="payment-method">
+                        <i class="fas fa-university"></i>
+                        <h4>Bank Transfer</h4>
+                        <p>NEFT/RTGS/IMPS</p>
+                    </button>
+                </div>
+            </div>
+        
+            <div class="form-section">
+                <div class="secure-badge">
+                    <i class="fas fa-lock"></i> Your information is secure and encrypted
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

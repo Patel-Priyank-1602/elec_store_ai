@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+
+    <style>
+        :root {
+            --primary: #4338ca;
+            --primary-hover: #4338ca;
+            --success: #4338ca;
+            --success-hover: #4338ca;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            color: #111827;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .card-icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 20px;
+        }
+
+        .card-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-option input[type="radio"] {
+            display: none;
+        }
+
+        .card-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 80px;
+            text-align: center;
+        }
+
+        .card-option label:hover {
+            border-color: var(--primary);
+            background-color: #f9fafb;
+        }
+
+        .card-option input[type="radio"]:checked + label {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #6b7280;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="month"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            font-size: 1em;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-split {
+            display: flex;
+            gap: 15px;
+        }
+
+        .input-split .input-group {
+            flex: 1;
+        }
+
+        .amount-display {
+            background-color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+            color: #111827;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #fff;
+            background-color: var(--success);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: #6b7280;
+        }
+
+        .secure-badge i {
+            margin-right: 5px;
+            color: var(--success);
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+
+            .card-icons {
+                gap: 10px;
+            }
+
+            .card-option label {
+                width: 70px;
+                padding: 8px;
+            }
+
+            .input-split {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Payment Details</h1>
+
+            <form id="paymentForm">
+                <div class="card-icons">
+                    <div class="card-option">
+                        <input type="radio" name="card" id="Rupay" value="Rupay" required>
+                        <label for="Rupay">
+                            <i class="fa-solid fa-credit-card card-icon"></i>
+                            Rupay
+                        </label>
+                    </div>
+                    <div class="card-option">
+                        <input type="radio" name="card" id="Visa" value="Visa">
+                        <label for="Visa">
+                            <i class="fab fa-cc-visa card-icon"></i>
+                            Visa
+                        </label>
+                    </div>
+                    <div class="card-option">
+                        <input type="radio" name="card" id="Mastercard" value="Mastercard">
+                        <label for="Mastercard">
+                            <i class="fab fa-cc-mastercard card-icon"></i>
+                            Mastercard
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="number">Card Number</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-credit-card"></i>
+                        <input type="text" id="number" placeholder="1234 5678 9012 3456" required
+                            pattern="[0-9\s]{13,19}" maxlength="19">
+                    </div>
+                </div>
+
+                <div class="input-split">
+                    <div class="input-group">
+                        <label for="expiry">Expiry Date</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-calendar"></i>
+                            <input type="month" id="expiry" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cvv">CVV</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="cvv" placeholder="123" required maxlength="4" pattern="[0-9]{3,4}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="amount-display">
+                    Total: ₹<span id="amount">0.00</span>
+                </div>
+
+                <button type="submit">
+                    <i class="fa-solid fa-lock"></i>
+                    Pay Securely
+                </button>
+
+                <div class="secure-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Secure and encrypted payment
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Format card number input with spaces
+            document.getElementById("number").addEventListener("input", function (e) {
+                let value = e.target.value.replace(/\s/g, "");
+                if (value.length > 0) {
+                    value = value.match(new RegExp('.{1,4}', 'g')).join(" ");
+                }
+                e.target.value = value;
+            });
+
+            // Retrieve total amount from localStorage
+            let totalAmount = localStorage.getItem("cartTotalAmount");
+
+            if (totalAmount) {
+                document.getElementById("amount").textContent = parseFloat(totalAmount).toFixed(2);
+            } else {
+                document.getElementById("amount").textContent = "0.00";
+                // Commented out to avoid breaking the demo
+                // alert("No amount found! Redirecting to cart...");
+                // window.location.href = "/cart";
+            }
+        });
+
+        document.getElementById("paymentForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            
+            // Simple validation
+            const cardNumber = document.getElementById("number").value;
+            const cvv = document.getElementById("cvv").value;
+            const expiry = document.getElementById("expiry").value;
+            
+            if (!document.querySelector('input[name="card"]:checked')) {
+                alert("Please select a card type");
+                return;
+            }
+            
+            if (cardNumber.replace(/\s/g, "").length < 13) {
+                alert("Please enter a valid card number");
+                return;
+            }
+            
+            if (!expiry) {
+                alert("Please select an expiry date");
+                return;
+            }
+            
+            if (cvv.length < 3) {
+                alert("Please enter a valid CVV");
+                return;
+            }
+            
+            // Success animation
+            const button = document.querySelector('button');
+            button.innerHTML = '<i class="fa-solid fa-circle-check"></i> Payment Successful!';
+            button.style.backgroundColor = '#059669';
+            
+            setTimeout(() => {
+                alert("Payment successful! ✅ Your order has been placed and will arrive within a maximum of 7 working days.");
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

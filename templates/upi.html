@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --success: #4895ef;
+            --success-dark: #059669;
+            --success-light: #d1fae5;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --animation-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #d7f1e6, #b3e6cc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--gray-800);
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .payment-header {
+            background-color: var(--success);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+        }
+
+        .payment-header p {
+            text-align: center;
+            margin-top: 8px;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .payment-logo {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .payment-logo i {
+            font-size: 2.8rem;
+            color: white;
+        }
+
+        .payment-form {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 14px 14px 42px;
+            font-size: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            background-color: var(--gray-50);
+            transition: all var(--animation-speed);
+        }
+
+        .form-control:focus {
+            border-color: var(--success);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            outline: none;
+        }
+
+        .form-control[readonly] {
+            background-color: var(--success-light);
+            border-color: var(--success);
+            font-weight: 600;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background-color: var(--success);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all var(--animation-speed);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: var(--gray-600);
+            font-size: 0.85rem;
+        }
+
+        .security-badge i {
+            margin-right: 6px;
+            color: var(--success);
+        }
+
+        .payment-apps {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .payment-app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .payment-app i {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--gray-600);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .divider::before {
+            margin-right: 10px;
+        }
+
+        .divider::after {
+            margin-left: 10px;
+        }
+
+        .amount-display {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .amount-display .amount-title {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 5px;
+        }
+
+        .amount-display .amount-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        /* Animation for successful payment */
+        @keyframes successPulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .payment-success {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            animation: successPulse 0.5s ease-in-out;
+        }
+
+        .payment-success i {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        .payment-success h2 {
+            font-size: 1.8rem;
+            color: var(--gray-800);
+            margin-bottom: 10px;
+        }
+
+        .payment-success p {
+            color: var(--gray-600);
+            text-align: center;
+            max-width: 80%;
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 480px) {
+            .payment-header {
+                padding: 20px;
+            }
+
+            .payment-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .payment-form {
+                padding: 25px 20px;
+            }
+
+            .form-control {
+                padding: 12px 12px 12px 40px;
+                font-size: 0.95rem;
+            }
+
+            .btn {
+                padding: 14px;
+                font-size: 1rem;
+            }
+
+            .amount-display .amount-value {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <div class="payment-logo">
+                <i class="fas fa-mobile-screen-button"></i>
+            </div>
+            <h1>UPI Payment</h1>
+            <p>Fast, secure, and convenient</p>
+        </div>
+
+        <div class="payment-form">
+            <div class="amount-display">
+                <div class="amount-title">Payment Amount</div>
+                <div class="amount-value" id="displayAmount">₹0.00</div>
+            </div>
+
+            <div class="payment-apps">
+                <div class="payment-app">
+                    <i class="fab fa-google-pay"></i>
+                    <span>Google Pay</span>
+                </div>
+                <div class="payment-app">
+                    <i class="fab fa-amazon-pay"></i>
+                    <span>Amazon Pay</span>
+                </div>
+                <div class="payment-app">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>PhonePe</span>
+                </div>
+                <div class="payment-app">
+                    <i class="fas fa-wallet"></i>
+                    <span>Paytm</span>
+                </div>
+            </div>
+
+            <div class="divider">or pay directly</div>
+
+            <form action="pay.php" id="paymentForm">
+                <div class="form-group">
+                    <label for="id">UPI ID</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-at input-icon"></i>
+                        <input type="email" id="id" class="form-control" required placeholder="yourname@upi">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pin">UPI PIN</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="pin" class="form-control" required placeholder="Enter your 6-digit UPI PIN">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount (₹)</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fas fa-rupee-sign input-icon"></i>
+                        <input type="number" id="amount" class="form-control" required readonly>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-check-circle"></i>Confirm Payment
+                </button>
+
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Secured by 256-bit encryption
+                </div>
+            </form>
+        </div>
+
+        <div class="payment-success" id="paymentSuccess">
+            <i class="fas fa-check-circle"></i>
+            <h2>Payment Successful!</h2>
+            <p>Your transaction has been completed successfully. A confirmation has been sent to your registered email.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve total amount from localStorage
+            let totalAmount = localStorage.getItem("cartTotalAmount") || "1299.00";
+
+            if (totalAmount) {
+                let amountInput = document.getElementById("amount");
+                let displayAmount = document.getElementById("displayAmount");
+                
+                // Format the amount with rupee symbol
+                amountInput.value = totalAmount;
+                displayAmount.textContent = "₹" + parseFloat(totalAmount).toFixed(2);
+            } else {
+                alert("No amount found! Redirecting to cart...");
+                // window.location.href = "/cart"; // Redirect back to cart if no amount found
+            }
+        });
+
+        document.getElementById("paymentForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent actual form submission
+            
+            // Show success message with animation
+            document.getElementById("paymentSuccess").style.display = "flex";
+            
+            // Redirect after 3 seconds
+            setTimeout(function() {
+                // window.location.href = "/confirmation";
+                alert("Payment successful! ✅ Your order has been placed and will arrive within a maximum of 7 working days.");
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

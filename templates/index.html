@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronics Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic styling for the payment form */
+        #payment-form {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Ensure the cart count is visible when there are items */
+        #cart-count {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Electronics Store</h1>
+        <div class="user-nav">
+            <ul>
+                {% if session.user_id %}
+                <li class="nav-item">
+                    <span class="nav-link">Welcome, {{ session.name }}</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav category-nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Home Appliances</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Televisions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Phones & Wearables</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Computers & Tablets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Cameras & Accessories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Gaming</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="secondary-nav">
+        <ul class="cart-nav">
+            <li>
+                <button class="cart-btn" id="cart-button">
+                    🛒 Cart <span id="cart-count">0</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <aside id="subcategory-list">
+            <h2>Subcategories</h2>
+            <!-- Buttons for subcategories will be dynamically added here -->
+        </aside>
+
+        <section id="product-list">
+            <!-- Product cards will be dynamically generated here -->
+        </section>
+    </main>
+
+    <section id="cart">
+        <h2>Shopping Cart</h2>
+        <ul id="cart-items"></ul>
+        <div id="cart-total-container">
+            <p>Total: ₹<span id="cart-total">0</span></p>
+        </div>
+        <button id="proceed-btn" onclick="openPaymentForm()">Proceed to Payment</button>
+    </section>
+
+    <div id="payment-form">
+        <h2>Payment Form</h2>
+        <form id="paymentForm" action="{{ url_for('payment_website') }}" method="get" target="_blank">
+            <button type="submit">Pay Now</button>
+        </form>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-top">
+            <a href="#" class="back-to-top">Back to top</a>
+        </div>
+        <div class="footer-main">
+            <div class="footer-column">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press Releases</a></li>
+                    <li><a href="#">Our Science</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Connect with Us</h4>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Make Money with Us</h4>
+                <ul>
+                    <li><a href="#">Sell on Our Store</a></li>
+                    <li><a href="#">Sell under Accelerator</a></li>
+                    <li><a href="#">Protect and Build Your Brand</a></li>
+                    <li><a href="#">Global Selling</a></li>
+                    <li><a href="#">Supply to Us</a></li>
+                    <li><a href="#">Become an Affiliate</a></li>
+                    <li><a href="#">Fulfilment by Us</a></li>
+                    <li><a href="#">Advertise Your Products</a></li>
+                    <li><a href="#">Pay on Merchants</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li><a href="#">Your Account</a></li>
+                    <li><a href="#">Returns Centre</a></li>
+                    <li><a href="#">Recalls and Product Safety Alerts</a></li>
+                    <li><a href="#">100% Purchase Protection</a></li>
+                    <li><a href="#">App Download</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-links">
+                <a href="#">Conditions of Use & Sale</a>
+                <a href="#">Privacy Notice</a>
+                <a href="#">Interest-Based Ads</a>
+            </div>
+            <div class="footer-copyright">
+                <p>© 1996-2025, ElectronicsStore.com, Inc. or its affiliates</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

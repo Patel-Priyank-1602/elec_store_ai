@@ -1,0 +1,622 @@
+-- Create the database
+CREATE DATABASE electronics_store;
+
+-- Use the database
+USE electronics_store;
+
+-- Create the categories table
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Create the subcategories table
+CREATE TABLE subcategories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT,
+    name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+-- Create the products table
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    subcategory_id INT,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    image_url VARCHAR(255),
+    FOREIGN KEY (subcategory_id) REFERENCES subcategories(id)
+);
+
+-- Create the users table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) DEFAULT 'Pending',
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE order_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    price_at_purchase DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id INT,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Insert categories
+INSERT INTO categories (name) VALUES
+('Home Appliances'),
+('Televisions'),
+('Phones & Wearables'),
+('Computers & Tablets'),
+('Cameras & Accessories'),
+('Gaming');
+
+-- Insert subcategories for Home Appliances
+INSERT INTO subcategories (category_id, name) VALUES
+(1, 'Washing Machine'),
+(1, 'Washing Machine Accessories'),
+(1, 'Air Conditioners'),
+(1, 'Air Conditioners Accessories'),
+(1, 'Refrigerators & Freezers'),
+(1, 'Refrigerators & Freezers Accessories'),
+(1, 'Air Coolers'),
+(1, 'Fans'),
+(1, 'Room Heaters'),
+(1, 'Geysers'),
+(1, 'Vacuum Cleaners');
+
+INSERT INTO subcategories (category_id, name) VALUES
+(2, 'Televisions'),
+(2, 'Accessories'),
+(2, 'Projectors');
+
+-- Insert subcategories for Phones & Wearables
+INSERT INTO subcategories (category_id, name) VALUES
+(3, 'Phones'),
+(3, 'Wearables'),
+(3, 'Headphones & Earphones'),
+(3, 'Mobile Accessories'),
+(3, 'Screen Protectors');
+
+-- Insert subcategories for Computers & Tablets
+INSERT INTO subcategories (category_id, name) VALUES
+(4, 'Laptop'),
+(4, 'Desktop & All in one'),
+(4, 'Monitor'),
+(4, 'Mouse'),
+(4, 'Keyboard'),
+(4, 'Printers'),
+(4, 'Computer Software');
+
+-- Insert subcategories for Cameras & Accessories
+INSERT INTO subcategories (category_id, name) VALUES
+(5, 'Lens'),
+(5, 'Professional Cameras'),
+(5, 'Drone'),
+(5, 'Camera Accessories');
+
+-- Insert subcategories for Gaming
+INSERT INTO subcategories (category_id, name) VALUES
+(6, 'Laptop'),
+(6, 'Monitor'),
+(6, 'Mouse'),
+(6, 'Keyboard'),
+(6, 'Headphones');
+
+-- Insert products for Washing Machine
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(1, 'Front Load Washing Machine', 30000.00, '/static/images/product_images/front_load_washing_machine.jpg'),
+(1, 'Top Load Washing Machine', 25000.00, '/static/images/product_images/top_load_washing_machine.jpg'),
+(1, 'Semi-Automatic Washing Machine', 15000.00, '/static/images/product_images/semi_automatic_washing_machine.jpg'),
+(1, 'Fully Automatic Washing Machine', 35000.00, '/static/images/product_images/fully_automatic_washing_machine.jpg'),
+(1, 'Portable Washing Machine', 10000.00, '/static/images/product_images/portable_washing_machine.jpg'),
+(1, 'Compact Washing Machine', 20000.00, '/static/images/product_images/compact_washing_machine.jpg'),
+(1, 'Smart Washing Machine', 40000.00, '/static/images/product_images/smart_washing_machine.jpg'),
+(1, 'Energy Efficient Washing Machine', 32000.00, '/static/images/product_images/energy_efficient_washing_machine.jpg'),
+(1, 'Large Capacity Washing Machine', 45000.00, '/static/images/product_images/large_capacity_washing_machine.jpg'),
+(1, 'Quick Wash Washing Machine', 28000.00, '/static/images/product_images/quick_wash_washing_machine.jpg'),
+(1, 'Twin Tub Washing Machine', 18000.00, '/static/images/product_images/twin_tub_washing_machine.jpg');
+
+-- Insert products for Washing Machine Accessories
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(2, 'Washing Machine Cover', 1000.00, '/static/images/product_images/washing_machine_cover.jpg'),
+(2, 'Washing Machine Stand', 2000.00, '/static/images/product_images/washing_machine_stand.jpg'),
+(2, 'Washing Machine Cleaner', 500.00, '/static/images/product_images/washing_machine_cleaner.jpg'),
+(2, 'Washing Machine Hose', 800.00, '/static/images/product_images/washing_machine_hose.jpg'),
+(2, 'Washing Machine Filter', 1200.00, '/static/images/product_images/washing_machine_filter.jpg'),
+(2, 'Washing Machine Drain Pump', 2500.00, '/static/images/product_images/washing_machine_drain_pump.jpg'),
+(2, 'Washing Machine Agitator', 3000.00, '/static/images/product_images/washing_machine_agitator.jpg'),
+(2, 'Washing Machine Door Seal', 1500.00, '/static/images/product_images/washing_machine_door_seal.jpg'),
+(2, 'Washing Machine Lint Trap', 700.00, '/static/images/product_images/washing_machine_lint_trap.jpg'),
+(2, 'Washing Machine Water Inlet Valve', 1800.00, '/static/images/product_images/washing_machine_water_inlet_valve.jpg'),
+(2, 'Washing Machine Detergent Dispenser', 1300.00, '/static/images/product_images/washing_machine_detergent_dispenser.jpg');
+
+-- Insert products for Air Conditioners
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(3, 'Split AC 1 Ton', 30000.00, '/static/images/product_images/split_ac_1_ton.jpg'),
+(3, 'Split AC 1.5 Ton', 35000.00, '/static/images/product_images/split_ac_1.5_ton.jpg'),
+(3, 'Window AC 1 Ton', 25000.00, '/static/images/product_images/window_ac_1_ton.jpg'),
+(3, 'Window AC 1.5 Ton', 28000.00, '/static/images/product_images/window_ac_1.5_ton.jpg'),
+(3, 'Portable AC', 22000.00, '/static/images/product_images/portable_ac.jpg'),
+(3, 'Inverter AC 1 Ton', 38000.00, '/static/images/product_images/inverter_ac_1_ton.jpg'),
+(3, 'Inverter AC 1.5 Ton', 42000.00, '/static/images/product_images/inverter_ac_1.5_ton.jpg'),
+(3, 'Cassette AC', 50000.00, '/static/images/product_images/cassette_ac.jpg'),
+(3, 'Floor Standing AC', 45000.00, '/static/images/product_images/floor_standing_ac.jpg'),
+(3, 'Ductable AC', 60000.00, '/static/images/product_images/ductable_ac.jpg'),
+(3, 'Tower AC', 48000.00, '/static/images/product_images/tower_ac.jpg');
+
+-- Insert products for Air Conditioners Accessories
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(4, 'AC Remote Control', 1000.00, '/static/images/product_images/ac_remote_control.jpg'),
+(4, 'AC Cover', 1500.00, '/static/images/product_images/ac_cover.jpg'),
+(4, 'AC Cleaner', 800.00, '/static/images/product_images/ac_cleaner.jpg'),
+(4, 'AC Installation Kit', 2000.00, '/static/images/product_images/ac_installation_kit.jpg'),
+(4, 'AC Drain Pump', 2500.00, '/static/images/product_images/ac_drain_pump.jpg'),
+(4, 'AC Air Filter', 1200.00, '/static/images/product_images/ac_air_filter.jpg'),
+(4, 'AC Condenser', 5000.00, '/static/images/product_images/ac_condenser.jpg'),
+(4, 'AC Compressor', 8000.00, '/static/images/product_images/ac_compressor.jpg'),
+(4, 'AC Thermostat', 3000.00, '/static/images/product_images/ac_thermostat.jpg'),
+(4, 'AC Refrigerant', 4000.00, '/static/images/product_images/ac_refrigerant.jpg'),
+(4, 'AC Evaporator Coil', 4500.00, '/static/images/product_images/ac_evaporator_coil.jpg');
+
+-- Insert products for Refrigerators & Freezers
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(5, 'Single Door Refrigerator', 15000.00, '/static/images/product_images/single_door_refrigerator.jpg'),
+(5, 'Double Door Refrigerator', 25000.00, '/static/images/product_images/double_door_refrigerator.jpg'),
+(5, 'Side by Side Refrigerator', 40000.00, '/static/images/product_images/side_by_side_refrigerator.jpg'),
+(5, 'French Door Refrigerator', 50000.00, '/static/images/product_images/french_door_refrigerator.jpg'),
+(5, 'Mini Refrigerator', 10000.00, '/static/images/product_images/mini_refrigerator.jpg'),
+(5, 'Chest Freezer', 20000.00, '/static/images/product_images/chest_freezer.jpg'),
+(5, 'Upright Freezer', 22000.00, '/static/images/product_images/upright_freezer.jpg'),
+(5, 'Convertible Refrigerator', 30000.00, '/static/images/product_images/convertible_refrigerator.jpg'),
+(5, 'Smart Refrigerator', 60000.00, '/static/images/product_images/smart_refrigerator.jpg'),
+(5, 'Bottom Freezer Refrigerator', 35000.00, '/static/images/product_images/bottom_freezer_refrigerator.jpg'),
+(5, 'Top Freezer Refrigerator', 28000.00, '/static/images/product_images/top_freezer_refrigerator.jpg');
+
+-- Insert products for Refrigerators & Freezers Accessories
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(6, 'Refrigerator Shelf', 1500.00, '/static/images/product_images/refrigerator_shelf.jpg'),
+(6, 'Refrigerator Water Filter', 2000.00, '/static/images/product_images/refrigerator_water_filter.jpg'),
+(6, 'Refrigerator Door Seal', 1200.00, '/static/images/product_images/refrigerator_door_seal.jpg'),
+(6, 'Refrigerator Ice Maker', 3000.00, '/static/images/product_images/refrigerator_ice_maker.jpg'),
+(6, 'Refrigerator Light Bulb', 500.00, '/static/images/product_images/refrigerator_light_bulb.jpg'),
+(6, 'Refrigerator Crisper Drawer', 2500.00, '/static/images/product_images/refrigerator_crisper_drawer.jpg'),
+(6, 'Refrigerator Thermostat', 1800.00, '/static/images/product_images/refrigerator_thermostat.jpg'),
+(6, 'Refrigerator Compressor', 5000.00, '/static/images/product_images/refrigerator_compressor.jpg'),
+(6, 'Refrigerator Defrost Timer', 2200.00, '/static/images/product_images/refrigerator_defrost_timer.jpg'),
+(6, 'Refrigerator Condenser Fan', 3000.00, '/static/images/product_images/refrigerator_condenser_fan.jpg'),
+(6, 'Refrigerator Door Handle', 1000.00, '/static/images/product_images/refrigerator_door_handle.jpg');
+
+-- Insert products for Air Coolers
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(7, 'Desert Air Cooler', 10000.00, '/static/images/product_images/desert_air_cooler.jpg'),
+(7, 'Personal Air Cooler', 5000.00, '/static/images/product_images/personal_air_cooler.jpg'),
+(7, 'Tower Air Cooler', 8000.00, '/static/images/product_images/tower_air_cooler.jpg'),
+(7, 'Window Air Cooler', 7000.00, '/static/images/product_images/window_air_cooler.jpg'),
+(7, 'Portable Air Cooler', 6000.00, '/static/images/product_images/portable_air_cooler.jpg'),
+(7, 'Evaporative Air Cooler', 9000.00, '/static/images/product_images/evaporative_air_cooler.jpg'),
+(7, 'Industrial Air Cooler', 15000.00, '/static/images/product_images/industrial_air_cooler.jpg'),
+(7, 'Smart Air Cooler', 12000.00, '/static/images/product_images/smart_air_cooler.jpg'),
+(7, 'Energy Efficient Air Cooler', 11000.00, '/static/images/product_images/energy_efficient_air_cooler.jpg'),
+(7, 'Air Cooler with Humidifier', 13000.00, '/static/images/product_images/air_cooler_with_humidifier.jpg'),
+(7, 'Air Cooler with Ionizer', 14000.00, '/static/images/product_images/air_cooler_with_ionizer.jpg');
+
+-- Insert products for Fans
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(8, 'Ceiling Fan', 3000.00, '/static/images/product_images/ceiling_fan.jpg'),
+(8, 'Table Fan', 2000.00, '/static/images/product_images/table_fan.jpg'),
+(8, 'Pedestal Fan', 2500.00, '/static/images/product_images/pedestal_fan.jpg'),
+(8, 'Wall Mounted Fan', 2800.00, '/static/images/product_images/wall_mounted_fan.jpg'),
+(8, 'Exhaust Fan', 1500.00, '/static/images/product_images/exhaust_fan.jpg'),
+(8, 'Tower Fan', 3500.00, '/static/images/product_images/tower_fan.jpg'),
+(8, 'Floor Fan', 2200.00, '/static/images/product_images/floor_fan.jpg'),
+(8, 'Industrial Fan', 5000.00, '/static/images/product_images/industrial_fan.jpg'),
+(8, 'Mini USB Fan', 800.00, '/static/images/product_images/mini_usb_fan.jpg'),
+(8, 'Bladeless Fan', 4000.00, '/static/images/product_images/bladeless_fan.jpg'),
+(8, 'Misting Fan', 4500.00, '/static/images/product_images/misting_fan.jpg');
+
+-- Insert products for Room Heaters
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(9, 'Oil Filled Room Heater', 5000.00, '/static/images/product_images/oil_filled_room_heater.jpg'),
+(9, 'Fan Room Heater', 3000.00, '/static/images/product_images/fan_room_heater.jpg'),
+(9, 'Infrared Room Heater', 4000.00, '/static/images/product_images/infrared_room_heater.jpg'),
+(9, 'Halogen Room Heater', 3500.00, '/static/images/product_images/halogen_room_heater.jpg'),
+(9, 'Ceramic Room Heater', 4500.00, '/static/images/product_images/ceramic_room_heater.jpg'),
+(9, 'Convector Room Heater', 5500.00, '/static/images/product_images/convector_room_heater.jpg'),
+(9, 'Radiant Room Heater', 4800.00, '/static/images/product_images/radiant_room_heater.jpg'),
+(9, 'Portable Room Heater', 3200.00, '/static/images/product_images/portable_room_heater.jpg'),
+(9, 'Wall Mounted Room Heater', 6000.00, '/static/images/product_images/wall_mounted_room_heater.jpg'),
+(9, 'Baseboard Room Heater', 7000.00, '/static/images/product_images/baseboard_room_heater.jpg'),
+(9, 'Smart Room Heater', 8000.00, '/static/images/product_images/smart_room_heater.jpg');
+
+-- Insert products for Geysers
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(10, 'Instant Geyser', 3000.00, '/static/images/product_images/instant_geyser.jpg'),
+(10, 'Storage Geyser', 5000.00, '/static/images/product_images/storage_geyser.jpg'),
+(10, 'Gas Geyser', 6000.00, '/static/images/product_images/gas_geyser.jpg'),
+(10, 'Solar Geyser', 15000.00, '/static/images/product_images/solar_geyser.jpg'),
+(10, 'Electric Geyser', 4000.00, '/static/images/product_images/electric_geyser.jpg'),
+(10, 'Immersion Rod', 500.00, '/static/images/product_images/immersion_rod.jpg'),
+(10, 'Digital Geyser', 7000.00, '/static/images/product_images/digital_geyser.jpg'),
+(10, 'Energy Efficient Geyser', 6500.00, '/static/images/product_images/energy_efficient_geyser.jpg'),
+(10, 'Portable Geyser', 4500.00, '/static/images/product_images/portable_geyser.jpg'),
+(10, 'Tankless Geyser', 8000.00, '/static/images/product_images/tankless_geyser.jpg'),
+(10, 'Under Sink Geyser', 5500.00, '/static/images/product_images/under_sink_geyser.jpg'),
+(10, 'Vertical Geyser', 6000.00, '/static/images/product_images/vertical_geyser.jpg');
+
+-- Insert products for Vacuum Cleaners
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(11, 'Robotic Vacuum Cleaner', 20000.00, '/static/images/product_images/robotic_vacuum_cleaner.jpg'),
+(11, 'Upright Vacuum Cleaner', 10000.00, '/static/images/product_images/upright_vacuum_cleaner.jpg'),
+(11, 'Canister Vacuum Cleaner', 12000.00, '/static/images/product_images/canister_vacuum_cleaner.jpg'),
+(11, 'Stick Vacuum Cleaner', 8000.00, '/static/images/product_images/stick_vacuum_cleaner.jpg'),
+(11, 'Handheld Vacuum Cleaner', 5000.00, '/static/images/product_images/handheld_vacuum_cleaner.jpg'),
+(11, 'Wet and Dry Vacuum Cleaner', 15000.00, '/static/images/product_images/wet_and_dry_vacuum_cleaner.jpg'),
+(11, 'Cordless Vacuum Cleaner', 18000.00, '/static/images/product_images/cordless_vacuum_cleaner.jpg'),
+(11, 'Bagged Vacuum Cleaner', 9000.00, '/static/images/product_images/bagged_vacuum_cleaner.jpg'),
+(11, 'Bagless Vacuum Cleaner', 11000.00, '/static/images/product_images/bagless_vacuum_cleaner.jpg'),
+(11, 'HEPA Vacuum Cleaner', 16000.00, '/static/images/product_images/hepa_vacuum_cleaner.jpg'),
+(11, 'Cyclonic Vacuum Cleaner', 14000.00, '/static/images/product_images/cyclonic_vacuum_cleaner.jpg');
+
+-- Insert products for Televisions
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(12, '32-inch LED TV', 15000.00, '/static/images/product_images/32_inch_led_tv.jpg'),
+(12, '40-inch Smart TV', 25000.00, '/static/images/product_images/40_inch_smart_tv.jpg'),
+(12, '43-inch 4K TV', 30000.00, '/static/images/product_images/43_inch_4k_tv.jpg'),
+(12, '50-inch OLED TV', 50000.00, '/static/images/product_images/50_inch_oled_tv.jpg'),
+(12, '55-inch QLED TV', 60000.00, '/static/images/product_images/55_inch_qled_tv.jpg'),
+(12, '65-inch Curved TV', 70000.00, '/static/images/product_images/65_inch_curved_tv.jpg'),
+(12, '75-inch Ultra HD TV', 100000.00, '/static/images/product_images/75_inch_ultra_hd_tv.jpg'),
+(12, '85-inch Smart TV', 150000.00, '/static/images/product_images/85_inch_smart_tv.jpg'),
+(12, '32-inch HD Ready TV', 12000.00, '/static/images/product_images/32_inch_hd_ready_tv.jpg'),
+(12, '49-inch Full HD TV', 28000.00, '/static/images/product_images/49_inch_full_hd_tv.jpg'),
+(12, '55-inch Android TV', 45000.00, '/static/images/product_images/55_inch_android_tv.jpg');
+
+-- Insert products for Accessories
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(13, 'TV Wall Mount', 2000.00, '/static/images/product_images/tv_wall_mount.jpg'),
+(13, 'Soundbar', 8000.00, '/static/images/product_images/soundbar.jpg'),
+(13, 'TV Stand', 5000.00, '/static/images/product_images/tv_stand.jpg'),
+(13, 'Universal Remote Control', 1500.00, '/static/images/product_images/universal_remote_control.jpg'),
+(13, 'HDMI Cable', 1000.00, '/static/images/product_images/hdmi_cable.jpg'),
+(13, 'AV Receiver', 15000.00, '/static/images/product_images/av_receiver.jpg'),
+(13, 'TV Antenna', 2500.00, '/static/images/product_images/tv_antenna.jpg'),
+(13, 'Blu-ray Player', 7000.00, '/static/images/product_images/blu_ray_player.jpg'),
+(13, 'Streaming Device', 5000.00, '/static/images/product_images/streaming_device.jpg'),
+(13, 'Surge Protector', 1800.00, '/static/images/product_images/surge_protector.jpg'),
+(13, 'Cable Management Box', 1200.00, '/static/images/product_images/cable_management_box.jpg');
+
+-- Insert products for Projectors
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(14, 'Mini Projector', 15000.00, '/static/images/product_images/mini_projector.jpg'),
+(14, 'Full HD Projector', 30000.00, '/static/images/product_images/full_hd_projector.jpg'),
+(14, '4K Projector', 50000.00, '/static/images/product_images/4k_projector.jpg'),
+(14, 'Portable Projector', 20000.00, '/static/images/product_images/portable_projector.jpg'),
+(14, 'Short Throw Projector', 40000.00, '/static/images/product_images/short_throw_projector.jpg'),
+(14, 'Outdoor Projector', 25000.00, '/static/images/product_images/outdoor_projector.jpg'),
+(14, 'Business Projector', 35000.00, '/static/images/product_images/business_projector.jpg'),
+(14, 'Home Theater Projector', 45000.00, '/static/images/product_images/home_theater_projector.jpg'),
+(14, 'LED Projector', 22000.00, '/static/images/product_images/led_projector.jpg'),
+(14, 'Laser Projector', 60000.00, '/static/images/product_images/laser_projector.jpg'),
+(14, 'Gaming Projector', 55000.00, '/static/images/product_images/gaming_projector.jpg');
+
+-- Insert products for Phones
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(15, 'Smartphone Model A', 20000.00, '/static/images/product_images/smartphone_model_a.jpg'),
+(15, 'Smartphone Model B', 25000.00, '/static/images/product_images/smartphone_model_b.jpg'),
+(15, 'Smartphone Model C', 30000.00, '/static/images/product_images/smartphone_model_c.jpg'),
+(15, 'Budget Smartphone X', 10000.00, '/static/images/product_images/budget_smartphone_x.jpg'),
+(15, 'Flagship Phone Y', 50000.00, '/static/images/product_images/flagship_phone_y.jpg'),
+(15, 'Gaming Phone Z', 40000.00, '/static/images/product_images/gaming_phone_z.jpg'),
+(15, 'Foldable Phone F', 100000.00, '/static/images/product_images/foldable_phone_f.jpg'),
+(15, 'Camera Phone C', 35000.00, '/static/images/product_images/camera_phone_c.jpg'),
+(15, 'Business Phone B', 45000.00, '/static/images/product_images/business_phone_b.jpg'),
+(15, 'Rugged Phone R', 22000.00, '/static/images/product_images/rugged_phone_r.jpg'),
+(15, 'Eco-Friendly Phone E', 28000.00, '/static/images/product_images/eco_friendly_phone_e.jpg');
+
+-- Insert products for Wearables
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(16, 'Smartwatch S1', 10000.00, '/static/images/product_images/smartwatch_s1.jpg'),
+(16, 'Fitness Tracker F1', 5000.00, '/static/images/product_images/fitness_tracker_f1.jpg'),
+(16, 'Smart Band B1', 3000.00, '/static/images/product_images/smart_band_b1.jpg'),
+(16, 'Hybrid Smartwatch H1', 15000.00, '/static/images/product_images/hybrid_smartwatch_h1.jpg'),
+(16, 'Kids Smartwatch K1', 6000.00, '/static/images/product_images/kids_smartwatch_k1.jpg'),
+(16, 'Sports Watch W1', 12000.00, '/static/images/product_images/sports_watch_w1.jpg'),
+(16, 'Luxury Smartwatch L1', 30000.00, '/static/images/product_images/luxury_smartwatch_l1.jpg'),
+(16, 'Health Monitor HM1', 8000.00, '/static/images/product_images/health_monitor_hm1.jpg'),
+(16, 'GPS Watch G1', 18000.00, '/static/images/product_images/gps_watch_g1.jpg'),
+(16, 'Diving Watch D1', 25000.00, '/static/images/product_images/diving_watch_d1.jpg'),
+(16, 'Fashion Smartwatch FS1', 14000.00, '/static/images/product_images/fashion_smartwatch_fs1.jpg');
+
+-- Insert products for Headphones & Earphones
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(17, 'Wireless Earbuds E1', 5000.00, '/static/images/product_images/wireless_earbuds_e1.jpg'),
+(17, 'Over-Ear Headphones H1', 8000.00, '/static/images/product_images/over_ear_headphones_h1.jpg'),
+(17, 'Noise-Cancelling Headphones NC1', 15000.00, '/static/images/product_images/noise_cancelling_headphones_nc1.jpg'),
+(17, 'In-Ear Headphones IE1', 2000.00, '/static/images/product_images/in_ear_headphones_ie1.jpg'),
+(17, 'Gaming Headset GH1', 6000.00, '/static/images/product_images/gaming_headset_gh1.jpg'),
+(17, 'Sports Earphones SE1', 3000.00, '/static/images/product_images/sports_earphones_se1.jpg'),
+(17, 'True Wireless Earbuds TW1', 10000.00, '/static/images/product_images/true_wireless_earbuds_tw1.jpg'),
+(17, 'On-Ear Headphones OE1', 7000.00, '/static/images/product_images/on_ear_headphones_oe1.jpg'),
+(17, 'Bone Conduction Headphones BC1', 12000.00, '/static/images/product_images/bone_conduction_headphones_bc1.jpg'),
+(17, 'Audiophile Headphones AH1', 20000.00, '/static/images/product_images/audiophile_headphones_ah1.jpg'),
+(17, 'Neckband Earphones NE1', 4000.00, '/static/images/product_images/neckband_earphones_ne1.jpg');
+
+-- Insert products for Mobile Accessories
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(18, 'Phone Case C1', 500.00, '/static/images/product_images/phone_case_c1.jpg'),
+(18, 'Screen Protector SP1', 300.00, '/static/images/product_images/screen_protector_sp1.jpg'),
+(18, 'Power Bank PB1', 1500.00, '/static/images/product_images/power_bank_pb1.jpg'),
+(18, 'Car Charger CC1', 800.00, '/static/images/product_images/car_charger_cc1.jpg'),
+(18, 'Wireless Charger WC1', 2000.00, '/static/images/product_images/wireless_charger_wc1.jpg'),
+(18, 'Phone Grip PG1', 400.00, '/static/images/product_images/phone_grip_pg1.jpg'),
+(18, 'Selfie Stick SS1', 1000.00, '/static/images/product_images/selfie_stick_ss1.jpg'),
+(18, 'Phone Stand PS1', 600.00, '/static/images/product_images/phone_stand_ps1.jpg'),
+(18, 'Bluetooth Adapter BA1', 1200.00, '/static/images/product_images/bluetooth_adapter_ba1.jpg'),
+(18, 'Camera Lens CL1', 2500.00, '/static/images/product_images/camera_lens_cl1.jpg'),
+(18, 'Phone Armband PA1', 700.00, '/static/images/product_images/phone_armband_pa1.jpg');
+
+-- Insert products for Screen Protectors
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(19, 'Tempered Glass Screen Protector TG1', 500.00, '/static/images/product_images/tempered_glass_screen_protector_tg1.jpg'),
+(19, 'Liquid Screen Protector LS1', 800.00, '/static/images/product_images/liquid_screen_protector_ls1.jpg'),
+(19, 'Matte Screen Protector MS1', 400.00, '/static/images/product_images/matte_screen_protector_ms1.jpg'),
+(19, 'Privacy Screen Protector PR1', 700.00, '/static/images/product_images/privacy_screen_protector_pr1.jpg'),
+(19, 'Anti-Glare Screen Protector AG1', 600.00, '/static/images/product_images/anti_glare_screen_protector_ag1.jpg'),
+(19, 'Blue Light Filter Screen Protector BL1', 900.00, '/static/images/product_images/blue_light_filter_screen_protector_bl1.jpg'),
+(19, 'Edge-to-Edge Screen Protector EE1', 1000.00, '/static/images/product_images/edge_to_edge_screen_protector_ee1.jpg'),
+(19, 'Curved Screen Protector CS1', 1200.00, '/static/images/product_images/curved_screen_protector_cs1.jpg'),
+(19, 'HD Clear Screen Protector HD1', 1100.00, '/static/images/product_images/hd_clear_screen_protector_hd1.jpg'),
+(19, 'Anti-Fingerprint Screen Protector AF1', 1300.00, '/static/images/product_images/anti_fingerprint_screen_protector_af1.jpg'),
+(19, '3D Curved Screen Protector 3D1', 1500.00, '/static/images/product_images/3d_curved_screen_protector_3d1.jpg');
+
+-- Insert products for Laptop
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(20, 'Ultrabook Laptop U1', 50000.00, '/static/images/product_images/ultrabook_laptop_u1.jpg'),
+(20, 'Gaming Laptop G1', 70000.00, '/static/images/product_images/gaming_laptop_g1.jpg'),
+(20, 'Business Laptop B1', 60000.00, '/static/images/product_images/business_laptop_b1.jpg'),
+(20, 'Convertible Laptop C1', 55000.00, '/static/images/product_images/convertible_laptop_c1.jpg'),
+(20, 'Budget Laptop BL1', 30000.00, '/static/images/product_images/budget_laptop_bl1.jpg'),
+(20, 'Creator Laptop CR1', 80000.00, '/static/images/product_images/creator_laptop_cr1.jpg'),
+(20, 'Rugged Laptop R1', 65000.00, '/static/images/product_images/rugged_laptop_r1.jpg'),
+(20, 'Thin and Light Laptop TL1', 45000.00, '/static/images/product_images/thin_and_light_laptop_tl1.jpg'),
+(20, 'Student Laptop S1', 35000.00, '/static/images/product_images/student_laptop_s1.jpg'),
+(20, 'High-Performance Laptop HP1', 90000.00, '/static/images/product_images/high_performance_laptop_hp1.jpg'),
+(20, 'Eco-Friendly Laptop EF1', 52000.00, '/static/images/product_images/eco_friendly_laptop_ef1.jpg');
+
+-- Insert products for Desktop & All in one
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(21, 'Gaming Desktop GD1', 80000.00, '/static/images/product_images/gaming_desktop_gd1.jpg'),
+(21, 'All-in-One Desktop A1', 60000.00, '/static/images/product_images/all_in_one_desktop_a1.jpg'),
+(21, 'Business Desktop BD1', 50000.00, '/static/images/product_images/business_desktop_bd1.jpg'),
+(21, 'Mini Desktop MD1', 40000.00, '/static/images/product_images/mini_desktop_md1.jpg'),
+(21, 'Workstation Desktop WD1', 100000.00, '/static/images/product_images/workstation_desktop_wd1.jpg'),
+(21, 'Budget Desktop BUD1', 30000.00, '/static/images/product_images/budget_desktop_bud1.jpg'),
+(21, 'Creator Desktop CD1', 90000.00, '/static/images/product_images/creator_desktop_cd1.jpg'),
+(21, 'Compact Desktop CD2', 45000.00, '/static/images/product_images/compact_desktop_cd2.jpg'),
+(21, 'High-Performance Desktop HPD1', 120000.00, '/static/images/product_images/high_performance_desktop_hpd1.jpg'),
+(21, 'Silent Desktop SD1', 55000.00, '/static/images/product_images/silent_desktop_sd1.jpg'),
+(21, 'Eco-Friendly Desktop EFD1', 62000.00, '/static/images/product_images/eco_friendly_desktop_efd1.jpg');
+
+-- Insert products for Monitor
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(22, 'Curved Monitor CM1', 20000.00, '/static/images/product_images/curved_monitor_cm1.jpg'),
+(22, 'Gaming Monitor GM1', 25000.00, '/static/images/product_images/gaming_monitor_gm1.jpg'),
+(22, 'Ultrawide Monitor UM1', 30000.00, '/static/images/product_images/ultrawide_monitor_um1.jpg'),
+(22, '4K Monitor 4KM1', 35000.00, '/static/images/product_images/4k_monitor_4km1.jpg'),
+(22, 'Touchscreen Monitor TM1', 28000.00, '/static/images/product_images/touchscreen_monitor_tm1.jpg'),
+(22, 'Portable Monitor PM1', 15000.00, '/static/images/product_images/portable_monitor_pm1.jpg'),
+(22, 'Designer Monitor DM1', 40000.00, '/static/images/product_images/designer_monitor_dm1.jpg'),
+(22, 'High Refresh Rate Monitor HRM1', 32000.00, '/static/images/product_images/high_refresh_rate_monitor_hrm1.jpg'),
+(22, 'Ergonomic Monitor EM1', 22000.00, '/static/images/product_images/ergonomic_monitor_em1.jpg'),
+(22, 'Business Monitor BM1', 25000.00, '/static/images/product_images/business_monitor_bm1.jpg'),
+(22, 'Eco-Friendly Monitor EFM1', 27000.00, '/static/images/product_images/eco_friendly_monitor_efm1.jpg');
+
+-- Insert products for Mouse
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(23, 'Wireless Mouse WM1', 1500.00, '/static/images/product_images/wireless_mouse_wm1.jpg'),
+(23, 'Gaming Mouse GM2', 3000.00, '/static/images/product_images/gaming_mouse_gm2.jpg'),
+(23, 'Ergonomic Mouse EM2', 2500.00, '/static/images/product_images/ergonomic_mouse_em2.jpg'),
+(23, 'Optical Mouse OM1', 1000.00, '/static/images/product_images/optical_mouse_om1.jpg'),
+(23, 'Bluetooth Mouse BM2', 2000.00, '/static/images/product_images/bluetooth_mouse_bm2.jpg'),
+(23, 'Trackball Mouse TM2', 3500.00, '/static/images/product_images/trackball_mouse_tm2.jpg'),
+(23, 'Vertical Mouse VM1', 2800.00, '/static/images/product_images/vertical_mouse_vm1.jpg'),
+(23, 'Silent Mouse SM1', 1800.00, '/static/images/product_images/silent_mouse_sm1.jpg'),
+(23, 'Portable Mouse PM2', 1200.00, '/static/images/product_images/portable_mouse_pm2.jpg'),
+(23, 'High Precision Mouse HPM1', 4000.00, '/static/images/product_images/high_precision_mouse_hpm1.jpg'),
+(23, 'Wired Mouse WIM1', 800.00, '/static/images/product_images/wired_mouse_wim1.jpg');
+
+-- Insert products for Keyboard
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(24, 'Mechanical Keyboard MK1', 4000.00, '/static/images/product_images/mechanical_keyboard_mk1.jpg'),
+(24, 'Wireless Keyboard WK1', 2500.00, '/static/images/product_images/wireless_keyboard_wk1.jpg'),
+(24, 'Gaming Keyboard GK1', 3500.00, '/static/images/product_images/gaming_keyboard_gk1.jpg'),
+(24, 'Ergonomic Keyboard EK1', 3000.00, '/static/images/product_images/ergonomic_keyboard_ek1.jpg'),
+(24, 'Compact Keyboard CK1', 2000.00, '/static/images/product_images/compact_keyboard_ck1.jpg'),
+(24, 'Bluetooth Keyboard BK1', 2800.00, '/static/images/product_images/bluetooth_keyboard_bk1.jpg'),
+(24, 'Backlit Keyboard BLK1', 3200.00, '/static/images/product_images/backlit_keyboard_blk1.jpg'),
+(24, 'Foldable Keyboard FK1', 1800.00, '/static/images/product_images/foldable_keyboard_fk1.jpg'),
+(24, 'Silent Keyboard SK1', 2200.00, '/static/images/product_images/silent_keyboard_sk1.jpg'),
+(24, 'Slim Keyboard SLK1', 1500.00, '/static/images/product_images/slim_keyboard_slk1.jpg'),
+(24, 'Wired Keyboard WIK1', 1000.00, '/static/images/product_images/wired_keyboard_wik1.jpg');
+
+-- Insert products for Printers
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(25, 'Inkjet Printer IP1', 5000.00, '/static/images/product_images/inkjet_printer_ip1.jpg'),
+(25, 'Laser Printer LP1', 10000.00, '/static/images/product_images/laser_printer_lp1.jpg'),
+(25, 'All-in-One Printer AIP1', 8000.00, '/static/images/product_images/all_in_one_printer_aip1.jpg'),
+(25, 'Photo Printer PP1', 12000.00, '/static/images/product_images/photo_printer_pp1.jpg'),
+(25, 'Portable Printer PP2', 15000.00, '/static/images/product_images/portable_printer_pp2.jpg'),
+(25, '3D Printer 3DP1', 50000.00, '/static/images/product_images/3d_printer_3dp1.jpg'),
+(25, 'Wide Format Printer WFP1', 20000.00, '/static/images/product_images/wide_format_printer_wfp1.jpg'),
+(25, 'Dot Matrix Printer DMP1', 7000.00, '/static/images/product_images/dot_matrix_printer_dmp1.jpg'),
+(25, 'Thermal Printer TP1', 8500.00, '/static/images/product_images/thermal_printer_tp1.jpg'),
+(25, 'Multifunction Printer MFP1', 18000.00, '/static/images/product_images/multifunction_printer_mfp1.jpg'),
+(25, 'Eco-Friendly Printer EFP1', 9000.00, '/static/images/product_images/eco_friendly_printer_efp1.jpg');
+
+-- Insert products for Computer Software
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(26, 'Antivirus Software AS1', 2000.00, '/static/images/product_images/antivirus_software_as1.jpg'),
+(26, 'Office Suite OS1', 5000.00, '/static/images/product_images/office_suite_os1.jpg'),
+(26, 'Photo Editing Software PES1', 3000.00, '/static/images/product_images/photo_editing_software_pes1.jpg'),
+(26, 'Video Editing Software VES1', 4000.00, '/static/images/product_images/video_editing_software_ves1.jpg'),
+(26, 'Accounting Software ACS1', 6000.00, '/static/images/product_images/accounting_software_acs1.jpg'),
+(26, 'Graphic Design Software GDS1', 7000.00, '/static/images/product_images/graphic_design_software_gds1.jpg'),
+(26, 'Operating System OS2', 8000.00, '/static/images/product_images/operating_system_os2.jpg'),
+(26, 'Database Software DBS1', 9000.00, '/static/images/product_images/database_software_dbs1.jpg'),
+(26, 'Educational Software ES1', 2500.00, '/static/images/product_images/educational_software_es1.jpg'),
+(26, 'Utility Software US1', 1500.00, '/static/images/product_images/utility_software_us1.jpg'),
+(26, 'Development Software DS1', 5500.00, '/static/images/product_images/development_software_ds1.jpg');
+
+-- Insert products for Lens
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(27, 'Standard Zoom Lens SZ1', 15000.00, '/static/images/product_images/standard_zoom_lens_sz1.jpg'),
+(27, 'Telephoto Lens TL1', 25000.00, '/static/images/product_images/telephoto_lens_tl1.jpg'),
+(27, 'Wide-Angle Lens WA1', 20000.00, '/static/images/product_images/wide_angle_lens_wa1.jpg'),
+(27, 'Macro Lens ML1', 18000.00, '/static/images/product_images/macro_lens_ml1.jpg'),
+(27, 'Prime Lens PL1', 22000.00, '/static/images/product_images/prime_lens_pl1.jpg'),
+(27, 'Fisheye Lens FL1', 16000.00, '/static/images/product_images/fisheye_lens_fl1.jpg'),
+(27, 'Superzoom Lens SZL1', 30000.00, '/static/images/product_images/superzoom_lens_szl1.jpg'),
+(27, 'Tilt-Shift Lens TSL1', 35000.00, '/static/images/product_images/tilt_shift_lens_tsl1.jpg'),
+(27, 'Portrait Lens POL1', 28000.00, '/static/images/product_images/portrait_lens_pol1.jpg'),
+(27, 'Cine Lens CL1', 40000.00, '/static/images/product_images/cine_lens_cl1.jpg'),
+(27, 'Pancake Lens PAL1', 12000.00, '/static/images/product_images/pancake_lens_pal1.jpg');
+
+-- Insert products for Professional Cameras
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(28, 'DSLR Camera DC1', 50000.00, '/static/images/product_images/dslr_camera_dc1.jpg'),
+(28, 'Mirrorless Camera MC1', 60000.00, '/static/images/product_images/mirrorless_camera_mc1.jpg'),
+(28, 'Action Camera AC1', 20000.00, '/static/images/product_images/action_camera_ac1.jpg'),
+(28, 'Compact Camera CC1', 30000.00, '/static/images/product_images/compact_camera_cc1.jpg'),
+(28, 'Medium Format Camera MFC1', 100000.00, '/static/images/product_images/medium_format_camera_mfc1.jpg'),
+(28, 'Bridge Camera BC1', 40000.00, '/static/images/product_images/bridge_camera_bc1.jpg'),
+(28, 'Cinema Camera CC2', 150000.00, '/static/images/product_images/cinema_camera_cc2.jpg'),
+(28, '360 Camera 360C1', 25000.00, '/static/images/product_images/360_camera_360c1.jpg'),
+(28, 'Instant Camera IC1', 10000.00, '/static/images/product_images/instant_camera_ic1.jpg'),
+(28, 'Underwater Camera UC1', 35000.00, '/static/images/product_images/underwater_camera_uc1.jpg'),
+(28, 'Professional Video Camera PVC1', 80000.00, '/static/images/product_images/professional_video_camera_pvc1.jpg');
+
+-- Insert products for Drone
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(29, 'Consumer Drone CD1', 30000.00, '/static/images/product_images/consumer_drone_cd1.jpg'),
+(29, 'Professional Drone PD1', 80000.00, '/static/images/product_images/professional_drone_pd1.jpg'),
+(29, 'Racing Drone RD1', 25000.00, '/static/images/product_images/racing_drone_rd1.jpg'),
+(29, 'Mini Drone MD1', 10000.00, '/static/images/product_images/mini_drone_md1.jpg'),
+(29, 'FPV Drone FD1', 35000.00, '/static/images/product_images/fpv_drone_fd1.jpg'),
+(29, 'Selfie Drone SD1', 15000.00, '/static/images/product_images/selfie_drone_sd1.jpg'),
+(29, 'Agricultural Drone AD1', 100000.00, '/static/images/product_images/agricultural_drone_ad1.jpg'),
+(29, 'Industrial Drone ID1', 120000.00, '/static/images/product_images/industrial_drone_id1.jpg'),
+(29, 'Delivery Drone DD1', 50000.00, '/static/images/product_images/delivery_drone_dd1.jpg'),
+(29, 'Surveillance Drone SD2', 70000.00, '/static/images/product_images/surveillance_drone_sd2.jpg'),
+(29, 'Underwater Drone UD1', 40000.00, '/static/images/product_images/underwater_drone_ud1.jpg');
+
+-- Insert products for Camera Accessories
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(30, 'Tripod T1', 3000.00, '/static/images/product_images/tripod_t1.jpg'),
+(30, 'Camera Bag CB1', 2500.00, '/static/images/product_images/camera_bag_cb1.jpg'),
+(30, 'Memory Card MC2', 1500.00, '/static/images/product_images/memory_card_mc2.jpg'),
+(30, 'Camera Strap CS1', 1000.00, '/static/images/product_images/camera_strap_cs1.jpg'),
+(30, 'Lens Cap LC1', 500.00, '/static/images/product_images/lens_cap_lc1.jpg'),
+(30, 'Camera Cleaning Kit CCK1', 1200.00, '/static/images/product_images/camera_cleaning_kit_cck1.jpg'),
+(30, 'External Flash EF2', 5000.00, '/static/images/product_images/external_flash_ef2.jpg'),
+(30, 'Battery Grip BG1', 4000.00, '/static/images/product_images/battery_grip_bg1.jpg'),
+(30, 'Remote Shutter RS1', 800.00, '/static/images/product_images/remote_shutter_rs1.jpg'),
+(30, 'Lens Hood LH1', 1000.00, '/static/images/product_images/lens_hood_lh1.jpg'),
+(30, 'Camera Stabilizer CS2', 7000.00, '/static/images/product_images/camera_stabilizer_cs2.jpg');
+
+-- Insert products for Gaming Laptop
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(31, 'Gaming Laptop GL1', 70000.00, '/static/images/product_images/gaming_laptop_gl1.jpg'),
+(31, 'High-Performance Laptop HPL1', 90000.00, '/static/images/product_images/high_performance_laptop_hpl1.jpg'),
+(31, 'VR-Ready Laptop VRL1', 100000.00, '/static/images/product_images/vr_ready_laptop_vrl1.jpg'),
+(31, 'Esports Laptop EL1', 85000.00, '/static/images/product_images/esports_laptop_el1.jpg'),
+(31, 'Ultra-Thin Gaming Laptop UTGL1', 75000.00, '/static/images/product_images/ultra_thin_gaming_laptop_utgl1.jpg'),
+(31, 'Budget Gaming Laptop BGL1', 50000.00, '/static/images/product_images/budget_gaming_laptop_bgl1.jpg'),
+(31, 'Portable Gaming Laptop PGL1', 65000.00, '/static/images/product_images/portable_gaming_laptop_pgl1.jpg'),
+(31, 'Creator Gaming Laptop CGL1', 95000.00, '/static/images/product_images/creator_gaming_laptop_cgl1.jpg'),
+(31, 'Competitive Gaming Laptop CGL2', 80000.00, '/static/images/product_images/competitive_gaming_laptop_cgl2.jpg'),
+(31, 'Gaming Laptop with RGB GLRGB1', 78000.00, '/static/images/product_images/gaming_laptop_with_rgb_glrgb1.jpg'),
+(31, 'Gaming Laptop with High Refresh Rate GLHRR1', 82000.00, '/static/images/product_images/gaming_laptop_with_high_refresh_rate_glhrr1.jpg');
+
+-- Insert products for Gaming Monitor
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(32, 'Curved Gaming Monitor CGM1', 30000.00, '/static/images/product_images/curved_gaming_monitor_cgm1.jpg'),
+(32, 'High Refresh Rate Monitor HRRM1', 35000.00, '/static/images/product_images/high_refresh_rate_monitor_hrrm1.jpg'),
+(32, '4K Gaming Monitor 4KGM1', 40000.00, '/static/images/product_images/4k_gaming_monitor_4kgm1.jpg'),
+(32, 'Ultrawide Gaming Monitor UGM1', 45000.00, '/static/images/product_images/ultrawide_gaming_monitor_ugm1.jpg'),
+(32, 'G-Sync Monitor GSM1', 50000.00, '/static/images/product_images/g_sync_monitor_gsm1.jpg'),
+(32, 'FreeSync Monitor FSM1', 38000.00, '/static/images/product_images/freesync_monitor_fsm1.jpg'),
+(32, 'Portable Gaming Monitor PGM1', 25000.00, '/static/images/product_images/portable_gaming_monitor_pgm1.jpg'),
+(32, 'Competitive Gaming Monitor CGM2', 42000.00, '/static/images/product_images/competitive_gaming_monitor_cgm2.jpg'),
+(32, 'HDR Gaming Monitor HGM1', 55000.00, '/static/images/product_images/hdr_gaming_monitor_hgm1.jpg'),
+(32, 'Esports Gaming Monitor EGM1', 48000.00, '/static/images/product_images/esports_gaming_monitor_egm1.jpg'),
+(32, 'Budget Gaming Monitor BGM1', 20000.00, '/static/images/product_images/budget_gaming_monitor_bgm1.jpg');
+
+-- Insert products for Gaming Mouse
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(33, 'Wired Gaming Mouse WGM1', 2500.00, '/static/images/product_images/wired_gaming_mouse_wgm1.jpg'),
+(33, 'Wireless Gaming Mouse WLGM1', 3500.00, '/static/images/product_images/wireless_gaming_mouse_wlgm1.jpg'),
+(33, 'MMO Gaming Mouse MGM1', 4000.00, '/static/images/product_images/mmo_gaming_mouse_mgm1.jpg'),
+(33, 'FPS Gaming Mouse FGM1', 3000.00, '/static/images/product_images/fps_gaming_mouse_fgm1.jpg'),
+(33, 'RGB Gaming Mouse RGBGM1', 4500.00, '/static/images/product_images/rgb_gaming_mouse_rgbgm1.jpg'),
+(33, 'Ergonomic Gaming Mouse EGM2', 3800.00, '/static/images/product_images/ergonomic_gaming_mouse_egm2.jpg'),
+(33, 'Lightweight Gaming Mouse LGM1', 2800.00, '/static/images/product_images/lightweight_gaming_mouse_lgm1.jpg'),
+(33, 'Ambidextrous Gaming Mouse AGM1', 3200.00, '/static/images/product_images/ambidextrous_gaming_mouse_agm1.jpg'),
+(33, 'High DPI Gaming Mouse HDGM1', 5000.00, '/static/images/product_images/high_dpi_gaming_mouse_hdgm1.jpg'),
+(33, 'Competitive Gaming Mouse CGM3', 4200.00, '/static/images/product_images/competitive_gaming_mouse_cgm3.jpg'),
+(33, 'Budget Gaming Mouse BGM2', 1500.00, '/static/images/product_images/budget_gaming_mouse_bgm2.jpg');
+
+-- Insert products for Gaming Keyboard
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(34, 'Mechanical Gaming Keyboard MGK1', 5000.00, '/static/images/product_images/mechanical_gaming_keyboard_mgk1.jpg'),
+(34, 'Membrane Gaming Keyboard MEGK1', 2500.00, '/static/images/product_images/membrane_gaming_keyboard_megk1.jpg'),
+(34, 'RGB Gaming Keyboard RGBGK1', 4500.00, '/static/images/product_images/rgb_gaming_keyboard_rgbgk1.jpg'),
+(34, 'Wireless Gaming Keyboard WGK1', 3500.00, '/static/images/product_images/wireless_gaming_keyboard_wgk1.jpg'),
+(34, 'Compact Gaming Keyboard CGK1', 3000.00, '/static/images/product_images/compact_gaming_keyboard_cgk1.jpg'),
+(34, 'Ergonomic Gaming Keyboard EGK1', 4000.00, '/static/images/product_images/ergonomic_gaming_keyboard_egk1.jpg'),
+(34, 'Tenkeyless Gaming Keyboard TGK1', 3800.00, '/static/images/product_images/tenkeyless_gaming_keyboard_tgk1.jpg'),
+(34, 'High-End Gaming Keyboard HEGK1', 6000.00, '/static/images/product_images/high_end_gaming_keyboard_hegk1.jpg'),
+(34, 'Budget Gaming Keyboard BGK1', 2000.00, '/static/images/product_images/budget_gaming_keyboard_bgk1.jpg'),
+(34, 'Esports Gaming Keyboard ESGK1', 5500.00, '/static/images/product_images/esports_gaming_keyboard_esgk1.jpg'),
+(34, 'Customizable Gaming Keyboard CGK2', 7000.00, '/static/images/product_images/customizable_gaming_keyboard_cgk2.jpg');
+
+-- Insert products for Gaming Headphones
+INSERT INTO products (subcategory_id, name, price, image_url) VALUES
+(35, 'Over-Ear Gaming Headphones OEGH1', 5000.00, '/static/images/product_images/over_ear_gaming_headphones_oegk1.jpg'),
+(35, 'Wireless Gaming Headphones WGH1', 6000.00, '/static/images/product_images/wireless_gaming_headphones_wgh1.jpg'),
+(35, 'Surround Sound Headphones SSH1', 7000.00, '/static/images/product_images/surround_sound_headphones_ssh1.jpg'),
+(35, 'Noise-Cancelling Gaming Headphones NCGH1', 8000.00, '/static/images/product_images/noise_cancelling_gaming_headphones_ncgh1.jpg'),
+(35, 'Lightweight Gaming Headphones LGH1', 4000.00, '/static/images/product_images/lightweight_gaming_headphones_lgh1.jpg'),
+(35, 'RGB Gaming Headphones RGBGH1', 5500.00, '/static/images/product_images/rgb_gaming_headphones_rgbgk1.jpg'),
+(35, 'Competitive Gaming Headphones CGH1', 6500.00, '/static/images/product_images/competitive_gaming_headphones_cgh1.jpg'),
+(35, 'Budget Gaming Headphones BGH1', 3000.00, '/static/images/product_images/budget_gaming_headphones_bgh1.jpg'),
+(35, 'High-End Gaming Headphones HEGH1', 9000.00, '/static/images/product_images/high_end_gaming_headphones_hegh1.jpg'),
+(35, 'Esports Gaming Headphones ESGH1', 7500.00, '/static/images/product_images/esports_gaming_headphones_esgh1.jpg'),
+(35, 'Customizable Gaming Headphones CGH2', 8500.00, '/static/images/product_images/customizable_gaming_headphones_cgh2.jpg');
+
